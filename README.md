@@ -1,33 +1,18 @@
 <h1 align="center">
   <img alt="logo" src="https://forum.huawei.com/enterprise/en/data/attachment/forum/202204/21/120858nak5g1epkzwq5gcs.png" width="224px"/><br/>
-  Terraform AWS RDS module(s) ☁️
+  Terraform CloudFlare ☁️ Modules
 </h1>
-<p align="center">An easy to understand, opinionated terraform <b>composable</b> module<b> with batteries included 🔋</b>.<br/><br/>
+<p align="center">An easy to understand, opinionated terraform <b>composable</b> set of modules for CloudFlare, <b> with batteries included 🔋</b>.<br/><br/>
 
 ---
 
-[![Unit & Integration tests TerraTest](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/terratest.yml/badge.svg)](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/terratest.yml)
-[![Go Linter Terratest](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/golang-linter-terratest.yaml/badge.svg)](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/golang-linter-terratest.yaml)
-[![Release](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/release.yaml/badge.svg)](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/release.yaml)
-[![Terraform CI Checks Modules](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/terraform-ci-modules.yml/badge.svg)](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/terraform-ci-modules.yml)
-[![Terraform CI Checks Recipes](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/terraform-ci-recipes.yml/badge.svg)](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/terraform-ci-recipes.yml)
-[![Terraform Plan recipes AWS on PR](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/terraform-ci-plan-recipes-aws.yml/badge.svg)](https://github.com/Excoriate/terraform-registry-aws-rds/actions/workflows/terraform-ci-plan-recipes-aws.yml)
+## Available modules
 
-[//]: # (// FIXME: Remove, refactor or change. (Template)
+These mono-repo contains a set of Terraform modules and recipes for provisioning CloudFlare resources. The modules are designed to be **composable**, and **opinionated**. The recipes are designed to be **easy to understand**, and **easy to use**.
 
-
-<!-- ABOUT THE PROJECT -->
-## About The Module
-
-These mono-repo contains a set of Terraform modules and recipes for provisioning AWS RDS resources. The modules are designed to be **composable**, and **opinionated**. The recipes are designed to be **easy to understand**, and **easy to use**.
-In the following table are listed the modules included in this repository:
-
-| Module                                                 | Description                                                                                                                                                                                                                                                      |
-|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ✅**Stable** [default](./modules/default)               | Example module (boilerplate/template) module.                                                                                                                                                                                                                    |
-| ✅**Stable** [rds-cluster](./modules/rds-cluster)       | Full battle-tested RDS cluster module (Aurora, Postgres, etc. Single, or Global clusters)                                                                                                                                                                        |
-| ✅**Stable** [rds-cluster-sg](./modules/rds-cluster-sg) | Special module that create a set of security group rules, and a security group that can be used alongside a RDS-cluster. It's specially designed for serve RDS-related configurations, such as: allowing all the database members of a cluster to see each other |
-| ✅**Stable** [rds-db-proxy](./modules/rds-db-proxy)     | Full battle-tested RDS DB Proxy module (Aurora, Postgres, etc. Single, or Global clusters)        It also support targets, target groups and endpoints                                                                                                           |
+| Module                                                   | Description                                                                                  |
+|----------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| ✅**Stable** [CloudFlare Zone](./modules/cloudflare-zone) | This module provide a way to create a CloudFlare zone with all the necessary configurations. |
 
 ---
 
@@ -36,101 +21,17 @@ In the following table are listed the modules included in this repository:
 
 The documentation is **automatically generated** by [terraform-docs](https://terraform-docs.io), and it's available in the module's [README.md](modules/default/README.md) file.
 
-### Capabilities
+---
 
-[//]: # (// FIXME: Remove, refactor or change. (Template)
+## Mono-repo structure
 
-(put description here)
-
-### Getting Started
-
-[//]: # (// FIXME: Remove, refactor or change. (Template)
-
-(put description here)
-
-### Roadmap
-
-[//]: # (// FIXME: Remove, refactor or change. (Template)
-
-(put description here)
-
-### Module standard structure
-
-The module's relevant components, structure and "skeleton" is described below:
-
-```txt
-.
-├── CONTRIBUTING.md
-├── LICENSE
-├── Makefile
-├── README.md
-├── TaskFile.yml
-├── default
-│   └── unit
-├── docs
-│   └── contribution_guidelines.md
-├── examples
-│   ├── README.md
-│   ├── TaskFile.yml
-│   └── default
-│       └── basic
-│           ├── README.md
-│           ├── config
-│           │   └── fixtures.tfvars
-│           ├── main.tf
-│           ├── outputs.tf
-│           ├── providers.tf
-│           ├── variables.tf
-│           └── versions.tf
-├── modules
-│   ├── TaskFile.yml
-│   └── default
-│       ├── README.md
-│       ├── data.tf
-│       ├── locals.tf
-│       ├── main.tf
-│       ├── outputs.tf
-│       ├── variables.tf
-│       └── versions.tf
-├── release-please-config.json
-├── scripts
-│   ├── containers
-│   │   └── build-and-run.sh
-│   ├── golang
-│   │   └── go_build.sh
-│   └── hooks
-│       └── pre-commit-init.sh
-├── taskfiles
-│   ├── Taskfile.common.yml
-│   ├── Taskfile.devex.yml
-│   ├── Taskfile.precommit.yml
-│   ├── Taskfile.terraform.yml
-│   └── Taskfile.terragrunt.yml
-└── tests
-    ├── README.md
-    ├── TaskFile.yml
-    └── default
-        ├── integration
-        │   ├── default_basic_integration_test.go
-        │   ├── go.mod
-        │   ├── go.sum
-        │   └── target
-        │       └── basic
-        │           └── main.tf
-        └── unit
-            ├── default_basic_unit_test.go
-            ├── go.mod
-            ├── go.sum
-            └── target
-                └── basic
-                    └── main.tf```
-```
-
-Where:
 
 * **⚡️Modules**: refers to the actual module's directory. Where the `.tf` files reside. Each `subdirectory` is a module.
 * **⚡️Examples**: refers to the examples directory, where the examples recipes lives. These are also used for testing the infrastructure using [Terratest](https://terratest.gruntwork.io/). For its specific documentation, query [this link](examples/README.md)
 * **⚡️Tests**: refers to the tests directory, where the tests recipes lives. These are also used for testing the infrastructure using [Terratest](https://terratest.gruntwork.io/). For its specific documentation, query [this link](tests/README.md)
+
+
+---
 
 ## Developer Experience
 
