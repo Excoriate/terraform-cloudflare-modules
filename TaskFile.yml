@@ -1,0 +1,270 @@
+---
+version: '3'
+env:
+    env: '{{.ENV}}'
+
+vars:
+    mod: '{{default "default" .MODULE}}'
+    vars: '{{default "fixtures.tfvars" .VARS}}'
+    TEST_DIR: '{{default "tests" .TEST_DIR}}'
+    TERRATEST_DIR_UNIT: '{{default "unit" .TERRATEST_DIR_UNIT}}'
+    TERRATEST_DIR_INTEGRATION: '{{default "integration" .TERRATEST_DIR_INTEGRATION}}'
+    TEST_TYPE: '{{default "unit" .TEST_TYPE}}'
+    TERRAFORM_MODULES_DIR: '{{default "modules" .TERRAFORM_MODULES_DIR}}'
+    TERRAFORM_RECIPES_DIR: '{{default "examples" .TERRAFORM_RECIPES_DIR}}'
+    RECIPE: '{{default "basic" .RECIPE}}'
+
+dotenv: ['.env.{{.ENV}}.aws', '.env.{{.ENV}}.terraform', '.env.{{.ENV}}.terragrunt', '.env.{{.ENV}}']
+
+includes:
+    precommit:
+        taskfile: ./taskfiles/taskfile.precommit.yml
+    tf:
+        taskfile: ./taskfiles/Taskfile.terraform.yml
+
+tasks:
+    pc-init:
+        desc: Initialize and install required hooks
+        cmds:
+            - task: precommit:hooks-init
+
+    pc-run:
+        desc: Run all the hooks described in the .pre-commit-config.yaml file
+        cmds:
+            - task: precommit:hooks-run
+    # ****************************************************
+    # Go Tasks
+    # ****************************************************
+    go-tidy:
+        desc: Tidy go modules
+        dir: ./{{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}
+        cmds:
+            - echo "===========> Run go tidy against code in directory {{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}"
+            - go mod tidy
+    go-fmt:
+        desc: Run go fmt against code
+        dir: ./{{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}
+        cmds:
+            - echo "===========> Run go fmt against code in directory {{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}"
+            - go fmt -x ./...
+    go-vet:
+        desc: Run go vet against code
+        dir: ./{{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}
+        cmds:
+            - echo "===========> Run go vet against code in directory {{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}"
+            - go vet ./...
+    go-lint:
+        desc: Run go lint against code
+        dir: ./{{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}
+        cmds:
+            - echo "===========> Run go lint against code in directory {{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}"
+            - golangci-lint run -v -E gofmt --config ../../../.golangci.yml
+    go-style:
+        desc: Code style -> fmt,vet,lint
+        deps: [go-fmt, go-vet, go-lint]
+    go-test:
+        desc: Run unit test-data
+        dir: ./{{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}
+        cmds:
+            - echo "===========> Run unit tests in directory {{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}"
+            - go test -v ./ -timeout 30m
+    go-ci:
+        desc: Run all the test-data and code checks
+        dir: ./{{.TEST_DIR}}/{{.MODULE}}/{{.TEST_TYPE}}
+        cmds:
+            - task: go-style
+            - task: go-tidy
+            - task: go-test-data
+            - task: go-build
+
+  # ***********************
+  # Terraform task (modules)
+  # (These tasks are used to run terraform commands in the examples directory)
+  # ***********************
+    tf-clean-all:
+        desc: Clean all the terraform modules and recipes
+        cmds:
+            - |
+              for d in $(find . -type d -name .terraform); do
+                  echo "===========> Cleaning $d"
+                  rm -rf $d
+              done
+    tf-init:
+        desc: Initialize the terraform module
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+
+    tf-plan:
+        desc: In the terraform module, execute a terraform plan
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:plan
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}', TF_VARS_FILE: '{{.VARS}}'}
+
+    tf-apply:
+        desc: In the terraform module, execute a terraform apply
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:apply
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}', TF_VARS_FILE: '{{.VARS}}'}
+
+    tf-destroy:
+        desc: In the terraform module, execute a terraform destroy
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:destroy
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}', TF_VARS_FILE: '{{.VARS}}'}
+
+    tf-ci:
+        desc: Run CI tasks for the terraform modules as part of the 'test-data' directory
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:validate
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:fmt-fix
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:lint
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:docs
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+
+    tf-upgrade:
+        desc: Run the terraform init upgrade in all available modules, and recipes.
+        cmds:
+            - task: common:clean
+            - task: tf:upgrade-modules
+              vars: {TF_MODULES_DIR: '{{.TERRAFORM_MODULES_DIR}}'}
+            - task: tf:upgrade-recipes
+              vars: {TF_RECIPES_DIR: '{{.TERRAFORM_RECIPES_DIR}}'}
+
+    tf-lint:
+        desc: Run terraform lint
+        cmds:
+            - task: common:clean
+            - task: tf:lint
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+
+    tf-docs:
+        desc: Generate terraform docs
+        cmds:
+            - task: common:clean
+            - task: tf:docs
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+
+    tf-docs-all:
+        desc: Generate terraform docs for a set of modules and/or recipes
+        cmds:
+            - task: common:clean
+            - task: tf:doc-modules
+              vars: {TF_MODULES_DIR: '{{.TERRAFORM_MODULES_DIR}}'}
+            - task: tf:doc-recipes
+              vars: {TF_RECIPES_DIR: '{{.TERRAFORM_RECIPES_DIR}}'}
+
+    recipe-init:
+        desc: Initialize the terraform module
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+
+    recipe-lint:
+        desc: Lint the terraform module's recipe
+        cmds:
+            - task: common:clean
+            - task: tf:lint
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+
+    recipe-plan:
+        desc: In the terraform module, execute a terraform plan
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:plan
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}', TF_VARS_FILE: 'config/{{.VARS}}'}
+
+    recipe-apply:
+        desc: In the terraform module, execute a terraform apply
+        cmds:
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:apply
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}', TF_VARS_FILE: 'config/{{.VARS}}'}
+
+    recipe-destroy:
+        desc: In the terraform module, execute a terraform destroy
+        cmds:
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:destroy
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}', TF_VARS_FILE: 'config/{{.VARS}}'}
+
+    recipe-lifecycle:
+        desc: In the terraform module, execute a terraform lifecycle
+        cmds:
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:plan
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}', TF_VARS_FILE: 'config/{{.VARS}}'}
+            - task: tf:apply
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}', TF_VARS_FILE: 'config/{{.VARS}}'}
+            - task: tf:destroy
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}', TF_VARS_FILE: 'config/{{.VARS}}'}
+
+    recipe-ci:
+        desc: Run CI tasks for the terraform modules as part of the 'test-data' directory
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:validate
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:fmt-fix
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:lint
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:docs
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+
+    recipe-docs:
+        desc: Generate terraform docs
+        cmds:
+            - task: common:clean
+            - task: tf:docs
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+
+    iac-ci:
+        desc: Run CI against modules and its recipes
+        cmds:
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:validate
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:fmt-fix
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:lint
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: tf:docs
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_RECIPES_DIR}}/{{.MODULE}}/{{.RECIPE}}'}
+            - task: common:clean
+            - task: tf:init
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:validate
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:fmt-fix
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:lint
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
+            - task: tf:docs
+              vars: {TF_WORKING_DIR: '{{.TERRAFORM_MODULES_DIR}}/{{.MODULE}}'}
