@@ -10,9 +10,10 @@
 
 These mono-repo contains a set of Terraform modules and recipes for provisioning CloudFlare resources. The modules are designed to be **composable**, and **opinionated**. The recipes are designed to be **easy to understand**, and **easy to use**.
 
-| Module                                                   | Description                                                                                  |
-|----------------------------------------------------------|----------------------------------------------------------------------------------------------|
-| ✅**Stable** [CloudFlare Zone](./modules/cloudflare-zone) | This module provide a way to create a CloudFlare zone with all the necessary configurations. |
+| Module                                                      | Description                                                                                  |
+|-------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| ✅**Stable** [CloudFlare Zone](./modules/cloudflare-zone)    | This module provide a way to create a CloudFlare zone with all the necessary configurations. |
+| ✅**Stable** [CloudFlare Records](./modules/cloudflare-zone) | This module provide a way to create one or many records                                      |
 
 ---
 

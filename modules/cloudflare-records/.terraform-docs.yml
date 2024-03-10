@@ -1,0 +1,55 @@
+---
+formatter: markdown table
+
+header-from: main.tf
+content: |-
+    # ☁️ Cloudflare Records
+    ## Description
+    {{ .Header }}
+    This module creates [Cloudflare](https://www.cloudflare.com/) [records](https://developers.cloudflare.com/api/v4/zones/dns-records) for a given zone.
+    * 🚀 Create many records
+    * 📦 Create a single record
+    * 📦 Create records by using the [data] configuration.
+
+    ---
+    ## Example
+    Examples of this module's usage are available in the [examples](./examples) folder.
+
+    ```hcl
+    {{ include "../../examples/cloudflare-records/basic/main.tf" }}
+    ```
+    A quick recipe for this simple module can be found here:
+    ```hcl
+    {{ include "../../examples/cloudflare-records/basic/config/fixtures.tfvars" }}
+    ```
+
+    For module composition, It's recommended to take a look at the module's `outputs` to understand what's available:
+    ```hcl
+    {{ include "outputs.tf" }}
+    ```
+    ---
+
+    ## Module's documentation
+    (This documentation is auto-generated using [terraform-docs](https://terraform-docs.io))
+    {{ .Providers }}
+
+    {{ .Modules }}
+
+    {{ .Resources }}
+
+    {{ .Requirements }}
+
+    {{ .Inputs }}
+
+    {{ .Outputs }}
+
+output:
+    file: README.md
+    mode: inject
+    template: |-
+        <!-- BEGIN_TF_DOCS -->
+        {{ .Content }}
+        <!-- END_TF_DOCS -->
+settings:
+    anchor: true
+    color: true
