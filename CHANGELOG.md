@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.3...v0.1.4) (2024-03-10)
+
+
+### Bug Fixes
+
+* add missing properties in setting records ([2cbfdfc](https://github.com/Excoriate/terraform-cloudflare-modules/commit/2cbfdfc525696183b814fd1d85b14b1242e2029a))
+
 ## [0.1.3](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.2...v0.1.3) (2024-03-10)
 
 
