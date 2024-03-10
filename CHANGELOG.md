@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.1...v0.1.2) (2024-03-10)
+
+
+### Bug Fixes
+
+* adjust each.value for indexing strings ([7389dbe](https://github.com/Excoriate/terraform-cloudflare-modules/commit/7389dbe2a1558fb90b0b93ecbe75735258f36122))
+* outputs were not compatible with cloudflare ([934680e](https://github.com/Excoriate/terraform-cloudflare-modules/commit/934680e83f6c47face68f3592d5e0083a010f831))
+
 ## [0.1.1](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.0...v0.1.1) (2024-03-10)
 
 
