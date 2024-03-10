@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.0 (2024-03-10)
+
+
+### Features
+
+* add cloudflare zone module ([cf30b19](https://github.com/Excoriate/terraform-cloudflare-modules/commit/cf30b1953e6a78a374890fd7ec9191c8cc987a36))
+* first and initial commit ([13da4b9](https://github.com/Excoriate/terraform-cloudflare-modules/commit/13da4b975f19edd7eea1efa848e3141dd29362bc))
+
+
+### Bug Fixes
+
+* add versions.tf properly configured fro cloudfalre ([27868cd](https://github.com/Excoriate/terraform-cloudflare-modules/commit/27868cd5686e355ba1e3aff19c704e4eb2d8b4c5))
+
+
+### Docs
+
+* update main readme.md file ([27fbef9](https://github.com/Excoriate/terraform-cloudflare-modules/commit/27fbef9f4b74a69dca40d6aa58fa9ff66ece010e))
+
 ## [0.1.4](https://github.com/Excoriate/terraform-registry-aws-rds/compare/v0.1.3...v0.1.4) (2024-01-26)
 
 
