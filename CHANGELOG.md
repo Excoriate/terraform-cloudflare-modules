@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.3](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.2...v0.1.3) (2024-03-10)
+
+
+### Features
+
+* add cloudflare records module ([15f09e1](https://github.com/Excoriate/terraform-cloudflare-modules/commit/15f09e178a2f4326d1a350657bd30a609b9cc8fd))
+
+
+### Other
+
+* ignore example.com domain on recipes ([48f7d6f](https://github.com/Excoriate/terraform-cloudflare-modules/commit/48f7d6f4b2ce35973853df32aba4599861cc2db5))
+
 ## [0.1.2](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.1...v0.1.2) (2024-03-10)
 
 
