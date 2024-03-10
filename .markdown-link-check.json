@@ -18,6 +18,9 @@
     },
     {
       "pattern": "^docs/templates/"
+    },
+    {
+      "pattern": "http://www.example.com"
     }
   ],
   "retryCount": 5,
