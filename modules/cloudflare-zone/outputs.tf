@@ -1,20 +1,24 @@
-## ---------------------------------------------------------------------------------------------------------------------
-## GENERAL-PURPOSE OUTPUTS
-## This section contains all the general-purpose outputs of the module.
-## ---------------------------------------------------------------------------------------------------------------------
 output "is_enabled" {
   value       = var.is_enabled
-  description = "Whether the module is enabled or not."
+  description = "Whether the module is enabled or not"
 }
 
-output "tags_set" {
-  value       = var.tags
-  description = "The tags set for the module."
+output "cloudflare_zone_ids" {
+  value       = !local.is_enabled ? {} : { for zone in cloudflare_zone.this : zone.id => zone.id }
+  description = "the zone ids"
 }
 
-/*
--------------------------------------
-Custom outputs
--------------------------------------
-*/
-// FIXME: Remove, refactor or change. (Template)
+output "cloudflare_zone_name_servers" {
+  value       = !local.is_enabled ? {} : { for zone in cloudflare_zone.this : zone.name_servers => zone.name_servers }
+  description = "the zone name servers"
+}
+
+output "cloudflare_zone_plan" {
+  value       = !local.is_enabled ? {} : { for zone in cloudflare_zone.this : zone.plan => zone.plan }
+  description = "the zone plans"
+}
+
+output "cloudflare_zone_plan_id" {
+  value       = !local.is_enabled ? {} : { for zone in cloudflare_zone.this : zone.id => zone.id }
+  description = "the zone plan ids"
+}

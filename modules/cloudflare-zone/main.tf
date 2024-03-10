@@ -1,5 +1,5 @@
-resource "random_string" "random_text" {
-  for_each = local.is_enabled
-  length   = 10
-  special  = false
+resource "cloudflare_zone" "this" {
+  for_each   = local.domains_to_create
+  account_id = var.cloudflare_account_id
+  zone       = each.value["domain"]
 }
