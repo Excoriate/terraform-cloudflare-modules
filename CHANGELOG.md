@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.0...v0.1.1) (2024-03-10)
+
+
+### Refactoring
+
+* remove api_key an email ([9742bde](https://github.com/Excoriate/terraform-cloudflare-modules/commit/9742bdefd7c67335b2e6a9a840a9ca5c7c163a92))
+* remove api_key an email ([3c52a36](https://github.com/Excoriate/terraform-cloudflare-modules/commit/3c52a365d6fbb8bb8f79199223dd19f6f4feb972))
+
 ## 0.1.0 (2024-03-10)
 
 
