@@ -1,13 +1,16 @@
 resource "cloudflare_record" "this" {
   for_each = { for k, v in local.records_create : k => v if v["data"] == null }
 
-  zone_id = local.is_lookup_by_zone_id ? var.zone_id : local.is_lookup_by_zone_name ? data.cloudflare_zone.selected[0].id : null
-  name    = each.value["name"]
-  type    = each.value["type"]
-  value   = each.value["value"]
-  ttl     = each.value["ttl"]
-  proxied = each.value["proxied"]
-  tags    = each.value["tags"]
+  zone_id         = local.is_lookup_by_zone_id ? var.zone_id : local.is_lookup_by_zone_name ? data.cloudflare_zone.selected[0].id : null
+  name            = each.value["name"]
+  type            = each.value["type"]
+  value           = each.value["value"]
+  ttl             = each.value["ttl"]
+  proxied         = each.value["proxied"]
+  tags            = each.value["tags"]
+  priority        = each.value["priority"]
+  comment         = each.value["comment"]
+  allow_overwrite = each.value["allow_overwrite"]
 
   dynamic "timeouts" {
     for_each = each.value["timeouts"] != null ? [each.value["timeouts"]] : []
@@ -21,13 +24,17 @@ resource "cloudflare_record" "this" {
 resource "cloudflare_record" "with_data" {
   for_each = { for k, v in local.records_create : k => v if v["data"] != null }
 
-  zone_id = local.is_lookup_by_zone_id ? var.zone_id : local.is_lookup_by_zone_name ? data.cloudflare_zone.selected[0].id : null
-  name    = each.value["name"]
-  type    = each.value["type"]
-  value   = null
-  ttl     = each.value["ttl"]
-  proxied = each.value["proxied"]
-  tags    = each.value["tags"]
+  zone_id         = local.is_lookup_by_zone_id ? var.zone_id : local.is_lookup_by_zone_name ? data.cloudflare_zone.selected[0].id : null
+  name            = each.value["name"]
+  type            = each.value["type"]
+  value           = null
+  ttl             = each.value["ttl"]
+  proxied         = each.value["proxied"]
+  tags            = each.value["tags"]
+  priority        = each.value["priority"]
+  comment         = each.value["comment"]
+  allow_overwrite = each.value["allow_overwrite"]
+
 
   dynamic "timeouts" {
     for_each = each.value["timeouts"] != null ? [each.value["timeouts"]] : []

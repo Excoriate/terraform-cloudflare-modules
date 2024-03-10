@@ -17,5 +17,6 @@ locals {
     timeouts        = r["timeouts"]
   }]
 
-  records_create = !local.is_enabled ? {} : { for r in local.records : r["name"] => r }
+  #  records_create = !local.is_enabled ? {} : { for r in local.records : r["value"] => r }
+  records_create = { for i, r in local.records : "${r["name"]}-${r["type"]}-${i}" => r }
 }
