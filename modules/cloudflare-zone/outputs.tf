@@ -9,7 +9,7 @@ output "cloudflare_zone_ids" {
 }
 
 output "cloudflare_zone_name_servers" {
-  value       = !local.is_enabled ? {} : { for zone in cloudflare_zone.this : zone.name_servers => zone.name_servers }
+  value       = !local.is_enabled ? {} : { for zone in cloudflare_zone.this : zone.id => zone.name_servers }
   description = "the zone name servers"
 }
 
