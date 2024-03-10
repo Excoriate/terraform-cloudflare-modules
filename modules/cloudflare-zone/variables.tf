@@ -23,25 +23,6 @@ variable "cloudflare_account_id" {
   DESC
 }
 
-variable "cloudflare_api_key" {
-  type        = string
-  description = <<-DESC
-    The API key generated within the Cloudflare dashboard, used to authenticate against the Cloudflare API.
-    This key, in combination with the email associated with your Cloudflare account, allows Terraform to make
-    changes to your Cloudflare settings. It's recommended to use API tokens instead of the global API key
-    for enhanced security and scoped access control.
-  DESC
-}
-
-variable "cloudflare_email" {
-  type        = string
-  description = <<-DESC
-    The email address associated with your Cloudflare account. When using your Cloudflare API key for
-    authentication, this email is used to identify your account. For operations requiring API authentication,
-    both your API key and this email address must be provided.
-  DESC
-}
-
 variable "domains" {
   type = list(object({
     name   = string
