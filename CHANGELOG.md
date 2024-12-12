@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.5...v0.1.6) (2024-12-12)
+
+
+### Features
+
+* Update Cloudflare zone resource to use `account` instead of `account_id` ([b685352](https://github.com/Excoriate/terraform-cloudflare-modules/commit/b685352119daae1f12aaaab69fd862f43320e7b7))
+
 ## [0.1.5](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.4...v0.1.5) (2024-12-12)
 
 
