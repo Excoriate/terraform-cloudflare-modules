@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.6...v0.1.7) (2024-12-12)
+
+
+### Features
+
+* Add account ID to Cloudflare zone resource ([5f0d684](https://github.com/Excoriate/terraform-cloudflare-modules/commit/5f0d68455a59f39f6d7add0b7b6497a1cec5360e))
+
 ## [0.1.6](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.5...v0.1.6) (2024-12-12)
 
 
