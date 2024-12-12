@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.4...v0.1.5) (2024-12-12)
+
+
+### Features
+
+* Update Cloudflare zone resource to use `name` instead of `zone` ([0efb895](https://github.com/Excoriate/terraform-cloudflare-modules/commit/0efb8953b6223603d22bda3b639f9bad07993313))
+
 ## [0.1.4](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.3...v0.1.4) (2024-03-10)
 
 
