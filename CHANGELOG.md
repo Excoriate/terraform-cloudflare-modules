@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.7...v0.1.8) (2024-12-12)
+
+
+### Bug Fixes
+
+* Remove unused `cloudflare_zone_plan` output ([dadac19](https://github.com/Excoriate/terraform-cloudflare-modules/commit/dadac192e88b772a03ae3a9f5034633c78c7be7a))
+
 ## [0.1.7](https://github.com/Excoriate/terraform-cloudflare-modules/compare/v0.1.6...v0.1.7) (2024-12-12)
 
 
